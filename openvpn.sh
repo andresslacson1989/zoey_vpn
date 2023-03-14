@@ -787,7 +787,7 @@ install_done() {
     reboot
     exit 1
 }
- 
+
 install_require
 install_uptime
 install_sudo
