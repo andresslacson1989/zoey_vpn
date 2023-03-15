@@ -28,7 +28,7 @@ install_require() {
 
 install_squid() {
     #send Squid
-    curl -sb -X POST https://zoey.bytepsh.com/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Squid&ip=$IP"
+    curl -sb -X POST https://zoey.bytesph.com/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Squid&ip=$IP"
     clear
     echo "Installing Proxy."
     {
@@ -392,7 +392,7 @@ verb 3' >/etc/openvpn/server2.conf
         /bin/cat <<"EOM" >/etc/openvpn/login/auth_vpn
 #!/bin/bash
 ##Authentication
-data=$(curl -sb -X POST https://zoey.bytepsh.com/api/server/login -H "Content-Type: application/x-www-form-urlencoded" -d "login=true&username=$username&password=$password")
+data=$(curl -sb -X POST https://zoey.bytesph.com/api/server/login -H "Content-Type: application/x-www-form-urlencoded" -d "login=true&username=$username&password=$password")
 
 if [[ $data == "ACCEPT" ]];
 then
@@ -412,7 +412,7 @@ EOM
 #!/bin/bash
 
 ##set status online to user connected
-data=$(curl -sb -X POST https://zoey.bytepsh.com/api/server/update-status -H "Content-Type: application/x-www-form-urlencoded" -d "status=1&username=$common_name")
+data=$(curl -sb -X POST https://zoey.bytesph.com/api/server/update-status -H "Content-Type: application/x-www-form-urlencoded" -d "status=1&username=$common_name")
 
 BYTES1
 
@@ -420,7 +420,7 @@ BYTES1
         cat <<'BYTES2' >/etc/openvpn/login/disconnect.sh
 #!/bin/bash
 
-data=$(curl -sb -X POST https://zoey.bytepsh.com/api/server/update-status -H "Content-Type: application/x-www-form-urlencoded" -d "status=0&username=$common_name")
+data=$(curl -sb -X POST https://zoey.bytesph.com/api/server/update-status -H "Content-Type: application/x-www-form-urlencoded" -d "status=0&username=$common_name")
 BYTES2
 
         cat <<EOF >/etc/openvpn/easy-rsa/keys/ca.crt
