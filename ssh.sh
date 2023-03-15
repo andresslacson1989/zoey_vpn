@@ -176,7 +176,8 @@ END
 cat > /etc/rc.local <<-END
 #!/bin/sh -e
 # rc.local
-# By default this script does nothing.
+
+curl -sb -X POST $DOMAIN/api/server/install -H 'Content-Type: application/x-www-form-urlencoded' -d 'status=rebooted&ip=$IP'
 exit 0
 END
 
