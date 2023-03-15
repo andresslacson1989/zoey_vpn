@@ -177,7 +177,7 @@ cat > /etc/rc.local <<-END
 #!/bin/sh -e
 # rc.local
 
-curl -sb -X POST $DOMAIN/api/server/install -H 'Content-Type: application/x-www-form-urlencoded' -d 'status=rebooted&ip=$IP'
+curl -sb -X POST $DOMAIN/api/server/install -H 'Content-Type: application/x-www-form-urlencoded' -d 'status=rebooted&ip=$MYIP'
 exit 0
 END
 
