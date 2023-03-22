@@ -28,7 +28,7 @@ server_ip=$(curl -s https://api.ipify.org)
 timedatectl set-timezone Asia/Manila
 
 install_require () {
-curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Updates&ip=$MYIP"
+curl -sb -X POST https://zoey.bytesph.com/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Updates&ip=123.123.123.123"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
