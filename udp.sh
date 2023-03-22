@@ -1,57 +1,19 @@
 #!/bin/bash
-#Script Variables
 #Script By AkoSiBytes
+#Script Variables
 clear
-echo ""
-echo "  This installation needs some information before we can continue."
-echo ""
-sleep 2
-SUB_DOMAIN=''
-API=''
+IP=$(curl -s https://api.ipify.org)
+DOMAIN="https://zoey.bytesph.com"
+SUB_DOMAIN=$(curl -sb -X POST $DOMAIN/api/server/domain -H "Content-Type: application/x-www-form-urlencoded" -d "ip=$IP")
+API="$DOMAIN/api/hysteria"
 PORT=7777
 GROUP_ID="5075831208"
 BOT_TOKEN="5405146881:AAEWI1C917dE_K8JzKwR4F_v2s1s8jX-8aw"
-IP=$(curl -s https://api.ipify.org)
-
-while [[ "$SUB_DOMAIN" == '' ]]; do
-  clear
-  echo ""
-  echo "What is the domain name associated with this server?"
-  echo "The answer must be a valid domain."
-  echo "The Domain or Sub-Domain must not include any special character"
-  echo "Example: hyteria.bytesph.com"
-  echo ""
-  echo "Domain: "
-  read -r SUB_DOMAIN
-  if [[ "$SUB_DOMAIN" == *['!'@#\$%^\&*()_+]* ]]
-  then
-    SUB_DOMAIN=''
-  fi
-done
-
-while [[ "$API" == '' ]]; do
-  clear
-  echo ""
-  echo "What is the domain name associated with this server?"
-  echo "The answer must be a valid domain or sub-domain."
-  echo "The Domain or Sub-Domain must not include any special character"
-  echo "Example: hyteria.bytesph.com"
-  echo ""
-  echo "  Domain:      $SUB_DOMAIN"
-  echo ""
-  echo ""
-  echo "What is the API Endpoint for authentication?"
-  echo "Please include http:// or https://"
-  echo "Example: https://bytesph.com/api/authentication"
-  echo ""
-  echo "API Endpoint: "
-  read -r API
-done
 
 clear
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
 echo ""
-echo "  Domain:        $SUB_DOMAIN"
+echo "  Domain      :  $SUB_DOMAIN"
 echo "  API Endpoint:  $API"
 echo ""
 echo "  ##########################"
@@ -66,6 +28,7 @@ server_ip=$(curl -s https://api.ipify.org)
 timedatectl set-timezone Asia/Manila
 
 install_require () {
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Updates&ip=$MYIP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -91,6 +54,7 @@ clear
 }
 
 install_hysteria(){
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Hysteria&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -144,6 +108,7 @@ chmod 755 /etc/hysteria/hysteria.key
 }
 
 install_letsencrypt(){
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=SSL&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -157,7 +122,6 @@ echo "  ###############################"
 {
 apt remove apache2 -y
 echo "$SUB_DOMAIN" > /root/domain
-domain=$(cat /root/domain)
 curl  https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --register-account -m bytesph2023@gmail.com --server zerossl
 ~/.acme.sh/acme.sh --issue -d "$SUB_DOMAIN" --standalone -k ec-256
@@ -166,6 +130,7 @@ curl  https://get.acme.sh | sh
 }
 
 install_firewall_kvm () {
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Firewall&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -198,6 +163,7 @@ install_sudo(){
 }
 
 install_squid(){
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Squid&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -244,7 +210,6 @@ cd /etc || exit
 
 install_rclocal(){
   {
-
     echo "[Unit]
 Description=bytesph service
 Documentation=http://bytesph.com
@@ -256,12 +221,13 @@ RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target" >> /etc/systemd/system/bytesph.service
-    echo '#!/bin/sh -e
+    echo "#!/bin/sh -e
+curl -sb -X POST $DOMAIN/api/server/install -H 'Content-Type: application/x-www-form-urlencoded' -d 'status=rebooted&ip=$IP'
 iptables-restore < /etc/iptables_rules.v4
 ip6tables-restore < /etc/iptables_rules.v6
 sysctl -p
 service hysteria-server restart
-exit 0' >> /etc/rc.local
+exit 0" >> /etc/rc.local
     sudo chmod +x /etc/rc.local
     systemctl daemon-reload
     sudo systemctl enable bytesph
@@ -270,6 +236,8 @@ exit 0' >> /etc/rc.local
 }
 
 start_service () {
+
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Finalizing&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -311,11 +279,11 @@ echo "  This info is found on /root/hysteria.txt"
   echo "  Serer IP : $server_ip"
   echo "  Hysteria Port : $PORT"
 } >> /root/hysteria.txt
-
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=done&ip=$IP"
 history -c
 rm /root/install_server.sh &>/dev/null
-echo 'Server Installation Done. Rebooting Server in 15 seconds'
-sleep 15
+sleep 10
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Rebooting&ip=$IP"
 reboot
 }
 
